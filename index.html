@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HP Prime – Stat 2 Var | Grafična vadnica</title>
+  <style>
+    :root {
+      --bg: #f1f4f9;
+      --panel: #ffffff;
+      --ink: #1a2332;
+      --accent: #0d5db8;
+      --accent2: #2d8cff;
+      --success: #1b7a4b;
+      --warning: #d67b00;
+      --danger: #b63a3a;
+      --line: #dce8f5;
+      --code: #f5f8ff;
+      --shadow: 0 12px 32px rgba(8, 30, 62, 0.1);
+      --shadow-sm: 0 4px 12px rgba(8, 30, 62, 0.06);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.65;
+    }
+    .container { max-width: 1300px; margin: 0 auto; padding: 18px 16px 100px; }
+    
+    header {
+      background: linear-gradient(135deg, #0d2f5c 0%, #1d65c5 50%, #2d8cff 100%);
+      color: white;
+      border-radius: 24px;
+      padding: 32px 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+      border-radius: 50%;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      margin: 12px 0 0;
+      font-size: 1.08rem;
+      opacity: 0.95;
+    }
+
+    nav {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px 22px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+    nav h3 {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px 20px;
+    }
+    nav a {
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.98rem;
+    }
+    nav a:hover { color: var(--accent2); }
+
+    .chapter {
+      margin-top: 32px;
+      border-top: 4px solid var(--accent2);
+      padding-top: 18px;
+    }
+    .chapter h2 {
+      margin: 0 0 20px;
+      font-size: 2rem;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1.5px solid var(--line);
+      border-radius: 20px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      box-shadow: var(--shadow);
+      border-color: var(--accent2);
+      transform: translateY(-4px);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #e6f2ff, #f0f8ff);
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 0.75rem;
+      border: 1px solid #cfe8ff;
+      margin-bottom: 10px;
+      width: fit-content;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .icon-big {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .label {
+      display: block;
+      font-weight: 800;
+      color: var(--accent);
+      margin: 14px 0 8px;
+      font-size: 0.95rem;
+    }
+
+    pre {
+      background: var(--code);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      overflow: auto;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin: 8px 0 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    p, li {
+      margin: 0 0 10px;
+      color: var(--ink);
+      font-size: 0.98rem;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .box-info {
+      background: linear-gradient(135deg, #ecf9f1, #f5fdf9);
+      border-left: 5px solid var(--success);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin: 16px 0;
+      font-size: 0.96rem;
+    }
+
+    .box-warn {
+      background: linear-gradient(135deg, #fff5e8, #fffbf0);
+      border-left: 5px solid var(--warning);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin: 16px 0;
+      font-size: 0.96rem;
+    }
+
+    .box-danger {
+      background: linear-gradient(135deg, #fff1f1, #fff8f7);
+      border-left: 5px solid var(--danger);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin: 16px 0;
+      font-size: 0.96rem;
+    }
+
+    .syntax-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+    }
+    .syntax-table th {
+      background: linear-gradient(135deg, #e6f2ff, #f0f8ff);
+      color: var(--accent);
+      font-weight: 800;
+      padding: 10px 12px;
+      text-align: left;
+      border: 1px solid var(--line);
+    }
+    .syntax-table td {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      font-size: 0.93rem;
+    }
+    .syntax-table tr:nth-child(even) {
+      background: #f9fbfd;
+    }
+
+    .double-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .double-card > div {
+      background: var(--code);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 0.92rem;
+    }
+    @media (max-width: 768px) {
+      .double-card { grid-template-columns: 1fr; }
+      .container { padding: 12px 12px 80px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .step-box {
+      background: var(--code);
+      border-left: 5px solid var(--accent2);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 8px 0;
+      font-weight: 600;
+    }
+
+    .code-block {
+      background: #1e2a39;
+      color: #e8f4f8;
+      border-radius: 14px;
+      padding: 14px 16px;
+      overflow: auto;
+      font-family: monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+
+    .menu-path {
+      background: linear-gradient(to right, #e6f2ff, #f0f8ff);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-family: monospace;
+      font-weight: 700;
+      color: var(--accent);
+      display: inline-block;
+      margin: 4px 0;
+    }
+
+    .diagram {
+      background: var(--code);
+      border: 2px dashed var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      margin: 12px 0;
+      text-align: center;
+      font-family: monospace;
+      font-size: 0.95rem;
+      line-height: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📊 HP Prime – Stat 2 Var</h1>
+      <p class="subtitle">Grafična vadnica s tehnično natančnostjo, ikonami in detaljnimi HP Prime meniji</p>
+    </header>
+
+    <nav aria-label="Kazalo">
+      <h3>🧭 Kazalo vsebine</h3>
+      <ul>
+        <li><a href="#s1">1️⃣ Grafični simulator</a></li>
+        <li><a href="#s2">2️⃣ Sistemske nastavitve</a></li>
+        <li><a href="#s3">3️⃣ Uvod in osnove</a></li>
+        <li><a href="#s4">4️⃣ Prikaz</a></li>
+        <li><a href="#s5">5️⃣ Navigacija</a></li>
+        <li><a href="#s6">6️⃣ Tipkovnica in tipke</a></li>
+        <li><a href="#s7">7️⃣ Meniji in podmeniji</a></li>
+        <li><a href="#s8">8️⃣ Izračuni</a></li>
+        <li><a href="#s9">9️⃣ Delovni postopki</a></li>
+        <li><a href="#s10">🔟 Primeri in napovedovanje</a></li>
+        <li><a href="#s11">1️⃣1️⃣ HP Prime sintaksa in koda</a></li>
+        <li><a href="#s12">1️⃣2️⃣ Ukazi po vrstnem redu</a></li>
+      </ul>
+    </nav>
+
+    <!-- 1. GRAFIČNI SIMULATOR -->
+    <section id="s1" class="chapter">
+      <h2>1️⃣ Grafični simulator</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">🖥️ Simulator</div>
+          <h3>Vstop v aplikacijo</h3>
+          <span class="label">Pot do aplikacije</span>
+          <div class="menu-path">HOME → Apps → Statistics → Stat 2 Var</div>
+          <span class="label">Opis</span>
+          <p>Ko odprete Stat 2 Var, se prikaže tabela s stolpcema x in y. To je glavna podatkovna mreža.</p>
+          <span class="label">Prvi koraki</span>
+          <ol>
+            <li>Pritisnite <strong>APPS</strong></li>
+            <li>Izberite <strong>Statistics</strong></li>
+            <li>Kliknite na <strong>Stat 2 Var</strong></li>
+            <li>Vidite tabelo s podatki</li>
+          </ol>
+        </article>
+
+        <article class="card">
+          <div class="tag">📍 Prikaz točk</div>
+          <h3>Scatter prikaz (Razpršenost)</h3>
+          <span class="label">Pot v aplikaciji</span>
+          <div class="menu-path">Menu → Plot</div>
+          <span class="label">Tehnični opis</span>
+          <p>Prikazuje vse podatkovne pare kot točke na 2D grafu. Os X je neodvisna, os Y je odvisna spremenljivka.</p>
+          <div class="double-card">
+            <div><strong>Kaj vidite:</strong><br>Rdeče ali modre točke na grafu</div>
+            <div><strong>Kaj pomeni:</strong><br>Redke točke = razpršeni podatki<br>Guste točke = povezane spremenljivki</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="tag">📈 Linija</div>
+          <h3>Linearna črta (Fit)</h3>
+          <span class="label">Pot v aplikaciji</span>
+          <div class="menu-path">Menu → Fit → Linear</div>
+          <span class="label">Kaj se zgodi</span>
+          <p>HP Prime izračuna linearno funkcijo y = a·x + b, ki najbolje opisuje podatke. Črta se nariše čez točke.</p>
+          <p><strong>Formula:</strong> y = 1.8x + 2.4 (primer)</p>
+          <p><strong>R²:</strong> Pove, kako dobro črta ustreza podatkom (0–1, bliže 1 je bolje)</p>
+        </article>
+
+        <article class="card">
+          <div class="tag">🎯 Predpovedovanje</div>
+          <h3>Napoved točke</h3>
+          <span class="label">Pot v aplikaciji</span>
+          <div class="menu-path">Menu → Predict</div>
+          <span class="label">Kako se uporablja</span>
+          <p>Ko imate model (npr. y = 1.8x + 2.4), lahko vnesete x in dobite y.</p>
+          <div class="step-box">Primer: x = 10 → y ≈ 20.4</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 2. SISTEMSKE NASTAVITVE -->
+    <section id="s2" class="chapter">
+      <h2>2️⃣ Sistemske nastavitve</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">⚙️ Nastavitve</div>
+          <h3>Natančnost in oblika števil</h3>
+          <span class="label">Pot v aplikaciji</span>
+          <div class="menu-path">Shift → Settings → Number Format</div>
+          <span class="label">Najpomembnejšo nastavitve</span>
+          <table class="syntax-table">
+            <tr>
+              <th>Nastavka</th>
+              <th>Vrednost</th>
+              <th>Razlog</th>
+            </tr>
+            <tr>
+              <td>Precision</td>
+              <td>3–4</td>
+              <td>Dovolj za jasnost rezultatov</td>
+            </tr>
+            <tr>
+              <td>Format</td>
+              <td>Fixed</td>
+              <td>Vselej isto število decimalnih mest</td>
+            </tr>
+            <tr>
+              <td>Angle</td>
+              <td>Degrees</td>
+              <td>V Sloveniji običajno</td>
+            </tr>
+          </table>
+        </article>
+
+        <article class="card">
+          <div class="tag">🖼️ Grafika</div>
+          <h3>Grafične nastavitve</h3>
+          <span class="label">Pot v aplikaciji</span>
+          <div class="menu-path">Shift → Settings → Display</div>
+          <span class="label">Kaj nastaviti</span>
+          <ul>
+            <li><strong>Grid</strong> = ON (mreža za branje)</li>
+            <li><strong>Legend</strong> = ON (legenda za razlago)</li>
+            <li><strong>Color</strong> = Priporočljivo</li>
+            <li><strong>Marker</strong> = Circle (jasne točke)</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="tag">🎨 Barve</div>
+          <h3>Prilagodljive barve</h3>
+          <span class="label">Kako spremeniti barve</span>
+          <p>V grafu lahko spremenite barve točk in linij za boljšo vidljivost.</p>
+          <div class="step-box">Data Points: Red<br>Model Line: Blue<br>Background: White</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3. UVOD -->
+    <section id="s3" class="chapter">
+      <h2>3️⃣ Uvod in osnove</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">📚 Osnove</div>
+          <h3>Kaj je Stat 2 Var (dvovariabilna statistika)</h3>
+          <span class="label">Definicija</span>
+          <p>To je analiza dveh spremenljivk (x in y). Cilj je razumeti, kako je ena spremenljivka odvisna od druge.</p>
+          <span class="label">Primeri iz prakse</span>
+          <ul>
+            <li>💰 Prodaja glede na mesec</li>
+            <li>🌡️ Poraba energije glede na temperaturo</li>
+            <li>📈 Cena lastninskega premoženja glede na velikost</li>
+            <li>🏃 Čas tekma glede na razdaljo</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="tag">🎯 Koncept</div>
+          <h3>Neodvisna (x) in odvisna (y) spremenljivka</h3>
+          <span class="label">Razlika</span>
+          <div class="double-card">
+            <div><strong>x (neodvisna)</strong><br>Vhodna vrednost<br>Ki jo vi izbirate</div>
+            <div><strong>y (odvisna)</strong><br>Izhodna vrednost<br>Ki se spreminja</div>
+          </div>
+          <span class="label">Primer</span>
+          <pre>x = čas (ure)
+y = razdalja (km)</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">🔍 Razumevanje</div>
+          <h3>Pare podatkov (x, y)</h3>
+          <span class="label">Struktura</span>
+          <p>Vsaka vrstica v tabeli je en par: ena vrednost x in ena vrednost y.</p>
+          <pre>Vrstica 1: x=1, y=2
+Vrstica 2: x=2, y=4
+Vrstica 3: x=3, y=5</pre>
+          <div class="box-info">
+            <strong>💡 Nasveta:</strong> Več kot je parov, bolj natančen je model.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 4. PRIKAZ -->
+    <section id="s4" class="chapter">
+      <h2>4️⃣ Prikaz (Grafika)</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">📊 Prikaz</div>
+          <h3>Vrste prikazov</h3>
+          <span class="label">Razpoložljive možnosti v HP Prime</span>
+          <table class="syntax-table">
+            <tr>
+              <th>Tip</th>
+              <th>Ikona</th>
+              <th>Uporaba</th>
+            </tr>
+            <tr>
+              <td>Scatter</td>
+              <td>🔴🟢🔵</td>
+              <td>Točke brez linije</td>
+            </tr>
+            <tr>
+              <td>Line</td>
+              <td>━━━</td>
+              <td>Točke povezane</td>
+            </tr>
+            <tr>
+              <td>Linear Fit</td>
+              <td>📈</td>
+              <td>Ravna črta skozi točke</td>
+            </tr>
+            <tr>
+              <td>Quadratic Fit</td>
+              <td>∿∿</td>
+              <td>Ukrivljena parabola</td>
+            </tr>
+          </table>
+        </article>
+
+        <article class="card">
+          <div class="tag">🔍 Merilo</div>
+          <h3>Zoom in View</h3>
+          <span class="label">Tipke za upravljanje prikaza</span>
+          <p><strong>Zoom In (Povečaj):</strong> + ali Shift + Up</p>
+          <p><strong>Zoom Out (Zmanjšaj):</strong> - ali Shift + Down</p>
+          <p><strong>Auto (Samodejno):</strong> V menu → View → Auto Scale</p>
+          <div class="box-warn">
+            ⚠️ Če je obseg premajhen, trend lahko ni viden!
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="tag">🏷️ Oznake</div>
+          <h3>Legenda in osi</h3>
+          <span class="label">Kako dodati oznake</span>
+          <p><strong>V menu:</strong> Plot → Labels</p>
+          <ul>
+            <li>X-axis name: "Čas (h)"</li>
+            <li>Y-axis name: "Razdalja (km)"</li>
+            <li>Title: "Gibanje avtomobila"</li>
+          </ul>
+          <div class="box-info">
+            ✅ Dobra oznaka naredi graf jasnejšim in uporabnejšim.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 5. NAVIGACIJA -->
+    <section id="s5" class="chapter">
+      <h2>5️⃣ Navigacija v aplikaciji</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">⌨️ Tipke</div>
+          <h3>Premikanje po tabeli</h3>
+          <span class="label">Glavne tipke za navigacijo</span>
+          <pre>↑ / ↓ = premik po vrsticah
+← / → = premik po stolpcih
+Ctrl + Home = na začetek tabele
+Ctrl + End = na konec tabele</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">🗂️ Meni</div>
+          <h3>Preklapljanje pogledov</h3>
+          <span class="label">Glavne poti</span>
+          <div class="menu-path">Data → Podatki</div>
+          <div class="menu-path">Plot → Graf</div>
+          <div class="menu-path">Fit → Model</div>
+          <div class="menu-path">Results → Rezultati</div>
+          <div class="box-info">
+            Standardni delovni tok: Data → Plot → Fit → Results
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="tag">🔄 Bližnjice</div>
+          <h3>Hitri povratki</h3>
+          <span class="label">Kako se hitro vrniš</span>
+          <p><strong>Home:</strong> Domovinski zaslon</p>
+          <p><strong>Esc:</strong> Nazaj v prejšnji pogled</p>
+          <p><strong>Cancel:</strong> Prekliči akcijo</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6. TIPKOVNICA -->
+    <section id="s6" class="chapter">
+      <h2>6️⃣ Tipkovnica in tipke</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">⌨️ Tipke</div>
+          <h3>Osnovne funkcijske tipke</h3>
+          <span class="label">HP Prime ima posebne tipke</span>
+          <pre>APPS = dostop do aplikacij
+MENU = kontekstni meni
+HOME = domovinski zaslon
+SHIFT = modificirajte funkcijo</pre>
+          <span class="label">V tabeli podatkov</span>
+          <pre>Enter = potrdite vrednost
+Del = brišite znaka
+Clear = počistite celico
+Edit = uredi vrednost</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">🎨 Simboli</div>
+          <h3>Vnos posebnih znakov</h3>
+          <span class="label">Kako vpisati posebne znake</span>
+          <p><strong>Alpha + key:</strong> Črka (a, b, c...)</p>
+          <p><strong>Shift + key:</strong> Preusmeri na funkcijo</p>
+          <p><strong>Katalog:</strong> Shift + 0 (za vse funkcije)</p>
+          <div class="box-info">
+            HP Prime ima vgrajen katalog za vse operacije.
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="tag">📐 Matematika</div>
+          <h3>Tipke za računanje</h3>
+          <span class="label">Matematične operacije</span>
+          <pre>+ − × ÷ = ^
+√ π e ! %
+sin cos tan log ln</pre>
+          <div class="box-warn">
+            ⚠️ Pri regresiji neizmenjamo ročno! HP Prime izračuna avtomatično.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 7. MENIJI IN PODMENIJI -->
+    <section id="s7" class="chapter">
+      <h2>7️⃣ Meniji in podmeniji (Detaljna mapa)</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">🗂️ Glavni meni</div>
+          <h3>Menu → Data</h3>
+          <span class="label">Kaj je tu</span>
+          <pre>Menu → Data
+├── Edit (uredi celico)
+├── Delete (briši vrstico)
+├── Clear (počisti vse)
+├── Sort (sortiraj)
+├── Import (uvozi podatke)
+└── Statistics (osnovna statistika)</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">📊 Prikaz</div>
+          <h3>Menu → Plot</h3>
+          <span class="label">Kaj je tu</span>
+          <pre>Menu → Plot
+├── Scatter (točke)
+├── Line (črta čez točke)
+├── Fit (prileganje)
+├── Predict (napoved)
+├── Labels (oznake osi)
+└── View (zoom, merilo)</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">📈 Fit</div>
+          <h3>Menu → Fit</h3>
+          <span class="label">Izbira modela</span>
+          <pre>Menu → Fit
+├── Linear (y = ax + b)
+├── Quadratic (y = ax² + bx + c)
+├── Cubic (y = ax³ + ...)
+├── Exponential (y = a·e^(bx))
+├── Logarithmic (y = a·ln(x) + b)
+└── Power (y = a·x^b)</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">📋 Rezultati</div>
+          <h3>Menu → Results</h3>
+          <span class="label">Kaj je tu</span>
+          <pre>Menu → Results
+├── Summary (povzetek)
+├── Regression (regresija)
+├── Correlation (korelacija)
+├── R² (kakovost)
+└── Prediction (napoved)</pre>
+        </article>
+      </div>
+    </section>
+
+    <!-- 8. IZRAČUNI -->
+    <section id="s8" class="chapter">
+      <h2>8️⃣ Izračuni in statistične formule</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">🧮 Statistika</div>
+          <h3>Povprečje in odklon</h3>
+          <span class="label">Formule HP Prime</span>
+          <pre>Mean(list) = povprečje
+Median(list) = mediana
+StdDev(list) = standardni odklon
+Variance(list) = varianca</pre>
+          <span class="label">Primer</span>
+          <pre>Mean([1,2,3,4,5]) = 3
+StdDev([1,2,3,4,5]) = 1.41</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">📊 Korelacija</div>
+          <h3>Koeficient korelacije</h3>
+          <span class="label">Formula</span>
+          <pre>Corr(x, y)</pre>
+          <span class="label">Pomen rezultata</span>
+          <table class="syntax-table">
+            <tr>
+              <th>Vrednost</th>
+              <th>Pomen</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Popolna pozitivna povezava</td>
+            </tr>
+            <tr>
+              <td>0.7 - 0.9</td>
+              <td>Močna pozitivna</td>
+            </tr>
+            <tr>
+              <td>0.3 - 0.7</td>
+              <td>Srednja povezava</td>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>Ni povezave</td>
+            </tr>
+            <tr>
+              <td>-1</td>
+              <td>Popolna negativna</td>
+            </tr>
+          </table>
+        </article>
+
+        <article class="card">
+          <div class="tag">📈 Regresija</div>
+          <h3>Linearna regresija - izračun</h3>
+          <span class="label">Model</span>
+          <pre>y = a·x + b</pre>
+          <span class="label">HP Prime izračuna</span>
+          <pre>a = naklon (slope)
+b = prestrezanje (intercept)
+R² = koeficient determinacije</pre>
+          <div class="box-info">
+            HP Prime avtomatično izračuna a in b. Vi samo pritisnete Fit!
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="tag">📐 R²</div>
+          <h3>Koeficient determinacije (R²)</h3>
+          <span class="label">Kaj pove</span>
+          <pre>R² = (0 do 1)
+R² = 1: Model popolnoma ustreza
+R² = 0.9: Odličen model
+R² = 0.7: Dobar model
+R² = 0.5: Sprejemljiv model
+R² < 0.5: Slab model</pre>
+          <div class="box-warn">
+            ⚠️ Nikoli ne uporabljajte modela z R² < 0.7 za napovedovanje!
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="tag">🎯 Napoved</div>
+          <h3>Kako napovedati y</h3>
+          <span class="label">Postopek</span>
+          <ol>
+            <li>Imate model: y = 1.8x + 2.4</li>
+            <li>Vnesete x = 10</li>
+            <li>HP Prime izračuna: y = 1.8·10 + 2.4 = 20.4</li>
+          </ol>
+          <pre>x = 10 → y ≈ 20.4</pre>
+        </article>
+      </div>
+    </section>
+
+    <!-- 9. DELOVNI POSTOPKI -->
+    <section id="s9" class="chapter">
+      <h2>9️⃣ Delovni postopki (Korak za korakom)</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">✅ Postopek</div>
+          <h3>Faza 1: Vnos podatkov</h3>
+          <span class="label">Kaj naredite</span>
+          <ol>
+            <li>Pritisnite <strong>APPS → Statistics → Stat 2 Var</strong></li>
+            <li>V tabeli vnesite pare x, y</li>
+            <li>Vsaka vrstica = en par</li>
+          </ol>
+          <pre>Primer:
+x: 1  2  3  4  5
+y: 2  4  5  7  9</pre>
+          <span class="label">Nasveta</span>
+          <p>Pazite na napake pri vnosu! Eno napačno število lahko preusmeri ves model.</p>
+        </article>
+
+        <article class="card">
+          <div class="tag">✅ Postopek</div>
+          <h3>Faza 2: Pregled podatkov</h3>
+          <span class="label">Kaj preverite</span>
+          <ul>
+            <li>Ali so vsi x različni (ali so enaki)?</li>
+            <li>Ali je y smiselna glede na x?</li>
+            <li>Ali so izstopajoče točke?</li>
+          </ul>
+          <div class="step-box">Menu → Data → Statistics (prvo povzetek)</div>
+        </article>
+
+        <article class="card">
+          <div class="tag">✅ Postopek</div>
+          <h3>Faza 3: Grafični pregled</h3>
+          <span class="label">Kaj naredite</span>
+          <p>Pritisnite <strong>Menu → Plot → Scatter</strong></p>
+          <p>Poglejte obliko razpršenosti:</p>
+          <ul>
+            <li>💧 Linearna (ravna črta) → Linear fit</li>
+            <li>∿ Ukrivljena (parabola) → Quadratic fit</li>
+            <li>📈 Eksponentna (hitro raste) → Exponential fit</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="tag">✅ Postopek</div>
+          <h3>Faza 4: Izbira modela</h3>
+          <span class="label">Odločitev</span>
+          <p>Pritisnite <strong>Menu → Fit</strong> in izberite:</p>
+          <div class="double-card">
+            <div><strong>Linear</strong><br>Če je trend raven</div>
+            <div><strong>Quadratic</strong><br>Če je ukrivljen</div>
+          </div>
+          <p><strong>HP Prime avtomatično izračuna a, b in R²</strong></p>
+        </article>
+
+        <article class="card">
+          <div class="tag">✅ Postopek</div>
+          <h3>Faza 5: Preverjanje modela</h3>
+          <span class="label">Ali je model dobar?</span>
+          <p>Pritisnite <strong>Menu → Results</strong></p>
+          <ul>
+            <li>Če je R² > 0.9 → odličen model ✅</li>
+            <li>Če je R² > 0.7 → dobar model ✅</li>
+            <li>Če je R² < 0.5 → slab model ❌</li>
+          </ul>
+          <div class="box-warn">
+            Pred napovedovanjem VEDNO preverite R²!
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="tag">✅ Postopek</div>
+          <h3>Faza 6: Napoved</h3>
+          <span class="label">Kako napovedati</span>
+          <p>Pritisnite <strong>Menu → Predict</strong></p>
+          <p>Vnesite x in dobite y:</p>
+          <pre>Vnesete: x = 10
+Dobite: y = 18.4</pre>
+          <div class="box-info">
+            Napoved je natančna samo, če je R² > 0.7!
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 10. PRIMERI IN NAPOVEDOVANJE -->
+    <section id="s10" class="chapter">
+      <h2>🔟 Primeri in napovedovanje</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">📊 Primer 1</div>
+          <h3>Prodaja po mesecih</h3>
+          <span class="label">Podatki</span>
+          <pre>Mesec: 1  2  3  4  5
+Prodaja: 12 14 17 20 22</pre>
+          <span class="label">Postopek</span>
+          <div class="step-box">Fit → Linear</div>
+          <span class="label">Rezultat</span>
+          <pre>y = 2.5x + 9.5
+R² = 0.99 ✅ odličen</pre>
+          <span class="label">Napoved za mesec 7</span>
+          <pre>y = 2.5·7 + 9.5 = 27</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">📊 Primer 2</div>
+          <h3>Razdalja in čas (fizika)</h3>
+          <span class="label">Podatki (pospešeno gibanje)</span>
+          <pre>Čas (s): 0  1  2  3  4
+Razdalja (m): 0  1  4  9  16</pre>
+          <span class="label">Postopek</span>
+          <div class="step-box">Fit → Quadratic</div>
+          <span class="label">Rezultat</span>
+          <pre>y = x² (formula pospešenega gibanja!)
+R² = 1.0 ✅ popolno</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">📊 Primer 3</div>
+          <h3>Temperatura in poraba energije</h3>
+          <span class="label">Podatki</span>
+          <pre>Temp (°C): -5  0  5  10 15
+Poraba (kW): 45 35 25 15 8</pre>
+          <span class="label">Postopek</span>
+          <div class="step-box">Fit → Linear</div>
+          <span class="label">Rezultat</span>
+          <pre>y = -3.5x + 17.5
+R² = 0.99</pre>
+          <span class="label">Napoved pri 20°C</span>
+          <pre>y = -3.5·20 + 17.5 = -52.5 ❌ (nesmisleno! Model velja samo do 15°C)</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">📊 Primer 4</div>
+          <h3>Rast rastline (eksponentna)</h3>
+          <span class="label">Podatki</span>
+          <pre>Dan: 1  2  3  4  5
+Višina (cm): 2 4 8 16 32</pre>
+          <span class="label">Postopek</span>
+          <div class="step-box">Fit → Exponential</div>
+          <span class="label">Rezultat</span>
+          <pre>y = 2·2^x (ali y = a·e^(bx))
+R² = 1.0</pre>
+          <span class="label">Napoved za dan 6</span>
+          <pre>y = 2·2^6 = 128 cm</pre>
+        </article>
+      </div>
+    </section>
+
+    <!-- 11. HP PRIME SINTAKSA IN KODA -->
+    <section id="s11" class="chapter">
+      <h2>1️⃣1️⃣ HP Prime sintaksa in koda</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">💻 Koda</div>
+          <h3>Program: Vnos podatkov</h3>
+          <span class="label">HPP Program</span>
+          <div class="code-block">EXPORT StatDemo()
+BEGIN
+  LOCAL x, y;
+  x := [1,2,3,4,5];
+  y := [2,4,5,7,9];
+  PRINT(x);
+  PRINT(y);
+END;</div>
+          <span class="label">Kaj se zgodi</span>
+          <p>Program ustvari dve listi in ju izpiše na zaslonu.</p>
+        </article>
+
+        <article class="card">
+          <div class="tag">💻 Koda</div>
+          <h3>Program: Linearna regresija</h3>
+          <span class="label">HPP Program</span>
+          <div class="code-block">EXPORT LinearReg()
+BEGIN
+  LOCAL x, y, a, b, r2;
+  x := [1,2,3,4,5];
+  y := [2,4,5,7,9];
+  // Izračun naklona in prestrezanja
+  a := 1.7; // nagib
+  b := 0.5; // prestrezanje
+  PRINT("y = " + a + "x + " + b);
+END;</div>
+          <span class="label">Opomba</span>
+          <p>V pravi aplikaciji bi HP Prime avtomatično izračunal a in b.</p>
+        </article>
+
+        <article class="card">
+          <div class="tag">💻 Koda</div>
+          <h3>Program: Napoved</h3>
+          <span class="label">HPP Program</span>
+          <div class="code-block">EXPORT Predict()
+BEGIN
+  LOCAL x0, y0, a, b;
+  a := 1.7;
+  b := 0.5;
+  x0 := 10;
+  y0 := a*x0 + b;
+  PRINT("x = " + x0);
+  PRINT("y = " + y0);
+END;</div>
+          <span class="label">Izhod</span>
+          <pre>x = 10
+y = 17.5</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">💻 Koda</div>
+          <h3>Program: Prikaz grafa</h3>
+          <span class="label">HPP Program</span>
+          <div class="code-block">EXPORT PlotDemo()
+BEGIN
+  LOCAL x, y;
+  x := [1,2,3,4,5];
+  y := [2,4,5,7,9];
+  // Prikaz točk
+  PLOT(x, y, 2, RED);
+  // Prikaz modelne črte
+  PLOT(1.7, 0.5, 1, BLUE);
+END;</div>
+          <span class="label">Kaj se zgodi</span>
+          <p>Prikaze rdeče točke in modro linijo na grafu.</p>
+        </article>
+
+        <article class="card">
+          <div class="tag">💻 Koda</div>
+          <h3>Program: Statistika</h3>
+          <span class="label">HPP Program</span>
+          <div class="code-block">EXPORT StatsCalc()
+BEGIN
+  LOCAL x, m, s;
+  x := [1,2,3,4,5];
+  m := Mean(x);
+  s := StdDev(x);
+  PRINT("Mean = " + m);
+  PRINT("StdDev = " + s);
+END;</div>
+          <span class="label">Izhod</span>
+          <pre>Mean = 3
+StdDev = 1.41</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">💻 Koda</div>
+          <h3>HP Prime funkcije za statistiko</h3>
+          <span class="label">Glavne funkcije</span>
+          <table class="syntax-table">
+            <tr>
+              <th>Funkcija</th>
+              <th>Pomen</th>
+            </tr>
+            <tr>
+              <td>Mean(list)</td>
+              <td>Povprečje</td>
+            </tr>
+            <tr>
+              <td>Median(list)</td>
+              <td>Mediana</td>
+            </tr>
+            <tr>
+              <td>StdDev(list)</td>
+              <td>Standardni odklon</td>
+            </tr>
+            <tr>
+              <td>Variance(list)</td>
+              <td>Varianca</td>
+            </tr>
+            <tr>
+              <td>Corr(x, y)</td>
+              <td>Korelacija</td>
+            </tr>
+          </table>
+        </article>
+      </div>
+    </section>
+
+    <!-- 12. UKAZI PO VRSTNEM REDU -->
+    <section id="s12" class="chapter">
+      <h2>1️⃣2️⃣ Ukazi po vrstnem redu (Hitri nadzor)</h2>
+      <div class="grid">
+        <article class="card" style="grid-column: 1 / -1;">
+          <div class="tag">🎯 Hitra referenca</div>
+          <h3>Delovni tok Stat 2 Var</h3>
+          <div class="diagram">
+1. APPS → Statistics → Stat 2 Var<br>
+        ↓<br>
+2. Vnesite podatke x in y<br>
+        ↓<br>
+3. Menu → Plot → Scatter (preverite trend)<br>
+        ↓<br>
+4. Menu → Fit → Linear/Quadratic/Exponential<br>
+        ↓<br>
+5. Menu → Results (preverite R²)<br>
+        ↓<br>
+6. Menu → Predict (napovedajte y za x)<br>
+        ↓<br>
+7. Rezultat: y = a·x + b pri x0 → y0
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="tag">📋 Tipke</div>
+          <h3>Hitri ukazi (bližnjice)</h3>
+          <span class="label">Za hitro delo</span>
+          <pre>APPS = dostop do aplikacij
+HOME = domov
+MENU = meni v aplikaciji
+Esc = nazaj
+Enter = potvrdi</pre>
+        </article>
+
+        <article class="card">
+          <div class="tag">📊 Meniji</div>
+          <h3>Glavne poti v aplikaciji</h3>
+          <span class="label">Glavne veje</span>
+          <div class="menu-path">Data</div>
+          <div class="menu-path">Plot</div>
+          <div class="menu-path">Fit</div>
+          <div class="menu-path">Results</div>
+        </article>
+
+        <article class="card">
+          <div class="tag">✅ Preverjanje</div>
+          <h3>Pred napovedovanjem</h3>
+          <span class="label">Kaj preveriti</span>
+          <ul>
+            <li>✅ Podatki so pravilni?</li>
+            <li>✅ Trend je viden na grafu?</li>
+            <li>✅ Model je izbran pravilno?</li>
+            <li>✅ R² > 0.7?</li>
+            <li>✅ Napoved je smiselna?</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- KONEC -->
+    <div class="box-info" style="margin-top: 32px;">
+      <strong>💡 Končni nasveti:</strong>
+      <ul>
+        <li>Vselej začnite s pregledom podatkov in grafa.</li>
+        <li>Ne sprejmite modela le zato, ker obstaja — preverite R².</li>
+        <li>Korelacija ≠ vzrok in posledica. Statistika samo opisuje.</li>
+        <li>Napoved je dobra samo, če je R² > 0.7.</li>
+      </ul>
+    </div>
+
+    <div class="box-warn" style="margin-top: 16px;">
+      <strong>⚠️ Pogosta opozorila:</strong>
+      <ul>
+        <li>Ne uporabljajte linearne regresije, če je trend jasno kvadraten.</li>
+        <li>Izstopajoče točke lahko uničijo model — jih odstranite.</li>
+        <li>Napoved zunaj območja podatkov je nevarna.</li>
+      </ul>
+    </div>
+
+    <div class="box-danger" style="margin-top: 16px; margin-bottom: 40px;">
+      <strong>🧠 Lastna praksa:</strong>
+      <p>Vzemite podatke iz stvarnega problema in jih analizirajte po fazah:
+      <ol>
+        <li>Zbiranje podatkov</li>
+        <li>Vnos v HP Prime</li>
+        <li>Grafični pregled</li>
+        <li>Izbira modela</li>
+        <li>Napovedovanje in interpretacija</li>
+      </ol>
+      <p>To je najboljši način za učenje!</p>
+    </div>
+  </div>
+</body>
+</html>
